@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Nota RawBT</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 15px; max-width: 450px; margin: auto; background-color: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { text-align: center; margin-bottom: 20px; color: #333; }
+        label { font-weight: bold; display: block; margin-top: 10px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 12px; margin-top: 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Pembuat Nota RawBT</h2>
+    
+    <label for="toko">Nama Toko / Usaha:</label>
+    <input type="text" id="toko" value="FRESHQUE EDAMAME">
+
+    <label for="alamat">Alamat / Kontak:</label>
+    <input type="text" id="alamat" value="Wonosobo - HP: 08123456789">
+
+    <label for="item">Daftar Barang & Harga:</label>
+    <textarea id="item" rows="5">Edamame Fresh 1kg x 2  Rp 30.000
+Edamame Steam 500g x 1 Rp 12.000
+Benih Edamame 1kg x 1  Rp 45.000</textarea>
+
+    <label for="total">Total Bayar:</label>
+    <input type="text" id="total" value="Rp 87.000">
+
+    <button onclick="cetakNota()">Cetak Nota Sekarang</button>
+</div>
+
+<script>
+function cetakNota() {
+    let toko = document.getElementById('toko').value;
+    let alamat = document.getElementById('alamat').value;
+    let items = document.getElementById('item').value;
+    let total = document.getElementById('total').value;
+
+    let textToPrint = 
+        "\x1B\x40" +                       // Reset
+        "\x1B\x61\x01" +                   // Rata tengah
+        "\x1D\x21\x11" + toko + "\n" +     // Nama toko besar
+        "\x1D\x21\x00" + alamat + "\n" +   // Alamat normal
+        "--------------------------------\n" +
+        "\x1B\x61\x00" + items + "\n" +    // Item rata kiri
+        "--------------------------------\n" +
+        "\x1B\x61\x02" +                   // Rata kanan
+        "TOTAL : " + total + "\n\n" +
+        "\x1B\x61\x01" +                   // Rata tengah
+        "Terima Kasih Atas Pembelian Anda!\n\n\n\n";
+
+    let rawbtUrl = "intent:" + encodeURIComponent(textToPrint) + "#Intent;" +
+        "scheme=rawbt;" +
+        "package=ru.is210.rawbtprint;" +
+        "S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dru.is210.rawbtprint;" +
+        "end;";
+
+    window.location.href = rawbtUrl;
+}
+</script>
+
+</body>
+</html>
